@@ -2,6 +2,7 @@ package hello.login.web;
 
 import hello.login.domain.member.Member;
 import hello.login.domain.member.MemberRepository;
+import hello.login.web.argumentresolver.Login;
 import hello.login.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,7 @@ public class HomeController {
     private final SessionManager sessionManager;
 
 //    @GetMapping("/")
-    public String home(@CookieValue(name = "memberId", required = false) Long memberId,
-                       Model model) {
+    public String home(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
 
         if (memberId == null) {
             return "home";
@@ -71,10 +71,21 @@ public class HomeController {
         return "loginHome";
     }
 
-    @GetMapping("/")
+//    @GetMapping("/")
     public String homeV4(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember,
             Model model) {
+
+        if (loginMember == null) {
+            return "home";
+        }
+
+        model.addAttribute("member", loginMember);
+        return "loginHome";
+    }
+
+    @GetMapping("/")
+    public String homeV5(@Login Member loginMember, Model model) {
 
         if (loginMember == null) {
             return "home";
